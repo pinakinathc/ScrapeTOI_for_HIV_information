@@ -50,7 +50,7 @@ class ToiSpider(scrapy.Spider):
 			a_link = a.get('href')
 
 
-			if a_text and (' hiv ' in a_text.encode('utf8').lower() or 'hiv ' in a_text.encode('utf8').lower() or ' hiv' in a_text.encode('utf8').lower()):
+			if a_text and ('HIV' in a_text.encode('utf8') or 'AIDS' in a_text.encode('utf8')):
 				self.count_successfully_scrapped = self.count_successfully_scrapped +1
 
 				print "Entry: "+str(self.count_successfully_scrapped)
