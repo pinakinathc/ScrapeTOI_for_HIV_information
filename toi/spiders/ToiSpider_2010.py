@@ -22,6 +22,7 @@ class ToiSpider(scrapy.Spider):
 	count_successfully_scrapped = 0;
 	count_no_data = 0;
 	count_missed_totally = 0;
+	article_no = 0;
 
 	def start_requests(self):
 		base_url_1 = 'http://timesofindia.indiatimes.com/2010/1/1/archivelist/year-2009,month-1,starttime-'
@@ -59,6 +60,7 @@ class ToiSpider(scrapy.Spider):
 				print "Link: "
 				print a_link
 				print
+				yield scrapy.Request(url = a_link, callback=self.fetch_article)
 				
 	        # 	with open("output/files.txt", "wb") as myFile:
 	        # 		if a: myFile.write(a.encode('utf8'))
@@ -72,3 +74,18 @@ class ToiSpider(scrapy.Spider):
 	        # 	if a_link: myFile.write(a_link.encode('utf8'))
 	        #    	myFile.closed
 	        # 
+	def fetch_article(self,response):
+		data = response.css('div.Normal::text').extract()
+		try:
+			article = ''
+			for i in data:
+				article = article + i.encode('utf8')
+			with open('output/2010/article'+str(self.article_no)+'.txt', "wb") as myFile:
+				myFile.write(article)
+				myFile.closed
+			self.article_no = self.article_no + 1
+			print self.article_no
+		except Exception as e:
+			print "failed with response: ",response
+			print "Exception: ",e
+			inp = input()
